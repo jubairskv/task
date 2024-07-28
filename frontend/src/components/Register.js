@@ -13,12 +13,23 @@ const Register = () => {
         e.preventDefault();
         AuthService.register(username, email, password, role).then(
             () => {
-                navigate('/login');
+                AuthService.login(email, password).then(
+                    () => {
+                        navigate('/dashboard'); // Navigate to a protected route after login
+                    },
+                    (loginError) => {
+                        console.log('Login after registration failed:', loginError);
+                    }
+                );
             },
             (error) => {
-                console.log(error);
+                console.log('Registration failed:', error);
             }
         );
+    };
+
+    const navigateToLogin = () => {
+        navigate('/login');
     };
 
     return (
@@ -49,6 +60,10 @@ const Register = () => {
                     <button type="submit">Register</button>
                 </div>
             </form>
+            <div>
+                <p>Already have an account?</p>
+                <button onClick={navigateToLogin}>Login</button>
+            </div>
         </div>
     );
 };
